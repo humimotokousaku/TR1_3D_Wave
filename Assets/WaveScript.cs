@@ -7,11 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class WaveScript : MonoBehaviour
 {
-    public int resolution = 20;         // メッシュの解像度
-    public float amplitudeBigWave = 0.2f;
-    public float amplitude = 0.2f;      // 高さ
-    public float waveSpeed = 6f;       // 速さ
-    public float T = 1;                 // 周期
+    public int resolution = 20;            // メッシュの解像度
+    public float amplitudeBigWave = 0.2f;  // 大きい波の高さ
+    public float waveVelocity = 6f;        // 速さ
+    public float amplitude = 0.2f;         // 小さい波の高さ
+    public float T = 1;                    // 周期
 
     public GameObject cubePrefab;       // 浮かぶCubeのプレハブ
 
@@ -21,7 +21,6 @@ public class WaveScript : MonoBehaviour
     private float[] waveOffsets;
 
     private GameObject cube;            // 生成されたCubeの参照
-   
 
     void Start()
     {
@@ -35,10 +34,12 @@ public class WaveScript : MonoBehaviour
 
     void Update()
     {
+
         UpdateWave();
         UpdateMesh();
         UpdateCube();
     }
+
 
     void CreateWaveOffsets()
     {
@@ -100,12 +101,12 @@ public class WaveScript : MonoBehaviour
             {
                 int index = x + y * resolution;
                 float waveOffset = waveOffsets[index];
-                float waveValue = Mathf.Sin(waveOffset / T * (Time.time - (vertices[index].x / waveSpeed)));
-                float addWave = amplitudeBigWave * Mathf.Sin(2 * Mathf.PI / T * (Time.time - (vertices[index].x / waveSpeed)));
+                float waveValue = Mathf.Sin(waveOffset / T * (Time.time - (vertices[index].x / waveVelocity)));
+                float bigWave = amplitudeBigWave * Mathf.Sin(2 * Mathf.PI / T * (Time.time - (vertices[index].x / waveVelocity)));
 
-                vertices[index].y = waveValue * amplitude + addWave;
+                vertices[index].y = waveValue * amplitude + bigWave;
 
-                normals[index] = -Vector3.up;
+                normals[index] = Vector3.up;
             }
         }
     }
